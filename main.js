@@ -32,7 +32,7 @@ function PlacesViewModel() {
          google.maps.event.trigger(self.map, "resize");
      });
 
-     $('#inputSearch').keypress(function (e) {
+     $('#inputSearch').keyup(function (e) {
          if (e.which == 13) {
              self.search();
          }
@@ -49,7 +49,7 @@ function PlacesViewModel() {
             processData: true,
             data:        data,
             error: function(jqXHR) {
-                alert("API error " + jqXHR.status);
+                alert(self.getErrorMsg(jqXHR.status));
             }
         };
 
@@ -130,16 +130,25 @@ function PlacesViewModel() {
 
 
     self.getDetails = function(place_id) {
-        var uri = self.apiURI + '/' + place_id;
+        var uri = self.apiURI + '/s/' + place_id;
 
         self.ajax(uri, 'GET').done(function(data) {
             $('#detailsTabBtn').tab('show');
             self.placeDetails(data);
             self.reviews(data.reviews);
         }).fail(function(jqXHR) {
-
+            // noop
         });
     }
+
+
+    self.getErrorMsg = function(code) {
+        if (code == 204) {
+            return 'Sorry, no results. Try again with different params';
+        } else {
+            return 'Oups! Api error occured: ' + code;
+        }
+    };
 }
 
 var placesViewModel = new PlacesViewModel();
