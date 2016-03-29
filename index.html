@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>KRK Places API demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"><script src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-1.9.0.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div id="main" class="container">
+        <div class="row" style="margin-top: 20px">
+            <div class="col-lg-6 col-lg-offset-3">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-lg-12">
+                            <input type="text" class="form-control" id="inputSearch" data-bind="value: searchName" placeholder="What bar/pub are you looking for?">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-6">
+                            <div class="checkbox" id="currentLocationCheckbox" style="display: none">
+                                <label>
+                                    <input type="checkbox" data-bind="checked: currentLocationChecked"> Use my current location
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 pull-right" style="text-align: right">
+                            <button data-bind="click: search" class="btn btn-primary">Gimme some beer!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#mapTab" aria-controls="mapTab" role="tab" data-toggle="tab" id="mapTabBtn">Map</a></li>
+                    <li role="presentation"><a href="#listTab" aria-controls="listTab" role="tab" data-toggle="tab"  data-bind="visible: places().length" id="listTabBtn">List</a></li>
+                    <li role="presentation"><a href="#detailsTab" aria-controls="detailsTab" role="tab" data-toggle="tab" data-bind="visible: placeDetails().name" id="detailsTabBtn">Details</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="mapTab">
+                        <div class="col-lg-12" id="map"></div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="listTab">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Address</th>
+                                    <th>Rating</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: places">
+                                <tr>
+                                    <td data-bind="text: name"></td>
+                                    <td data-bind="text: vicinity"></td>
+                                    <td data-bind="text: rating"></td>
+                                    <td><button data-bind="click: function() { $root.getDetails(place_id) }" class="btn btn-primary btn-xs">Details</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="detailsTab">
+                        <h3 style="margin-bottom: 16px" data-bind="text: placeDetails().name"></h3>
+                        <div class="col-lg-6">
+                            <table class="table">
+                                <tr>
+                                    <td>Address:</td>
+                                    <td data-bind="text: placeDetails().address"></td>
+                                </tr>
+                                <tr>
+                                    <td>Phone no:</td>
+                                    <td data-bind="text: placeDetails().phone_no"></td>
+                                </tr>
+                                <tr>
+                                    <td>Rating:</td>
+                                    <td data-bind="text: placeDetails().rating"></td>
+                                </tr>
+                                <tr>
+                                    <td>Total ratings:</td>
+                                    <td data-bind="text: placeDetails().ratings_total"></td>
+                                </tr>
+                                <tr>
+                                    <td>Phone no:</td>
+                                    <td data-bind="text: placeDetails().phone_no"></td>
+                                </tr>
+                                <tr>
+                                    <td>Google Maps:</td>
+                                    <td><a data-bind="attr: { href: placeDetails().url, title: placeDetails().url }">Open</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Website:</td>
+                                    <td><a data-bind="attr: { href: placeDetails().website, title: placeDetails().website }">Open</a></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-lg-6">
+                            <ul class="media-list" data-bind="foreach: reviews">
+                                <li class="media">
+                                    <a href="#" class="pull-left">
+                                        <img src="res/img/person.jpg" alt="" class="img-circle img-responsive">
+                                    </a>
+                                    <div class="media-body">
+                                        <span class="text-muted pull-right">
+                                            <small class="text-muted" data-bind="text: new Date(time*1000)"></small>
+                                        </span>
+                                        <strong class="text-success" data-bind="text: author"></strong>
+                                        <p data-bind="text: text"></p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="main.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
+    async defer></script>
+</body>
+</html>
