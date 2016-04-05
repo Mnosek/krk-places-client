@@ -1,7 +1,7 @@
 function PlacesViewModel() {
     var self = this;
 
-    self.apiURI                 = 'http://api.krk-places.local/places';
+    self.apiURI                 = 'http://192.168.99.100:8001/places';
     self.places                 = ko.observableArray([]);
     self.currentLocationChecked = ko.observable();
     self.searchName             = ko.observable();
@@ -130,7 +130,7 @@ function PlacesViewModel() {
 
 
     self.getDetails = function(place_id) {
-        var uri = self.apiURI + '/s/' + place_id;
+        var uri = self.apiURI + '/' + place_id;
 
         self.ajax(uri, 'GET').done(function(data) {
             $('#detailsTabBtn').tab('show');
